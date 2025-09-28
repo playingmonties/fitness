@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Fitness Tracker">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDE4MCAxODAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxODAiIGhlaWdodD0iMTgwIiByeD0iNDAiIGZpbGw9IiM2NjdlZWEiLz4KPHN2ZyB4PSI0MCIgeT0iNDAiIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgZmlsbD0ibm9uZSI+Cjx0ZXh0IHg9IjUwIiB5PSI2NSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNjAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7wn5KqPC90ZXh0Pgo8L3N2Zz4KPC9zdmc+">
+    <title>Complete Fitness & Nutrition Tracker</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+        
+        .date-info {
+            text-align: center;
+            font-size: 1.1em;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+        
+        .tracker-row {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .tracker-info {
+            text-align: left;
+        }
+        
+        .tracker-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .tracker-subtitle {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+        
+        .progress-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            height: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            border-radius: 25px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.7em;
+        }
+        
+        .weights-progress { background: linear-gradient(90deg, #FF6B6B, #FF5252); }
+        .cardio-progress { background: linear-gradient(90deg, #4ECDC4, #26A69A); }
+        .creatine-progress { background: linear-gradient(90deg, #FFE066, #FFD54F); }
+        .protein-progress { background: linear-gradient(90deg, #BA68C8, #AB47BC); }
+        
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8em;
+            opacity: 0.9;
+        }
+        
+        .action-button {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+            min-width: 120px;
+        }
+        
+        .weights-btn {
+            background: linear-gradient(135deg, #FF6B6B, #FF5252);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        }
+        
+        .cardio-btn {
+            background: linear-gradient(135deg, #4ECDC4, #26A69A);
+            box-shadow: 0 4px 15px rgba(78, 205, 196, 0.4);
+        }
+        
+        .creatine-btn {
+            background: linear-gradient(135deg, #FFE066, #FFD54F);
+            box-shadow: 0 4px 15px rgba(255, 224, 102, 0.4);
+            color: #333;
+        }
+        
+        .protein-btn {
+            background: linear-gradient(135deg, #BA68C8, #AB47BC);
+            box-shadow: 0 4px 15px rgba(186, 104, 200, 0.4);
+        }
+        
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .action-button:disabled {
+            background: linear-gradient(135deg, #888, #666) !important;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2) !important;
+            color: white !important;
+        }
+        
+        .summary-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .summary-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .summary-stat {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+        }
+        
+        .summary-number {
+            font-size: 2em;
+            font-weight: bold;
+            display: block;
+        }
+        
+        .summary-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+        
+        .message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            z-index: 1000;
+            max-width: 300px;
+            transform: translateX(350px);
+            transition: transform 0.3s ease;
+        }
+        
+        .message.show {
+            transform: translateX(0);
+        }
+        
+        .success {
+            background: rgba(76, 175, 80, 0.9);
+            color: white;
+        }
+        
+        .info {
+            background: rgba(33, 150, 243, 0.9);
+            color: white;
+        }
+        
+        .controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .reset-button {
+            background: rgba(244, 67, 54, 0.8);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        
+        .reset-button:hover {
+            background: rgba(244, 67, 54, 1);
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .tracker-row {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 15px;
+                padding: 15px;
+            }
+            
+            .tracker-title {
+                font-size: 1.2em;
+                justify-content: center;
+            }
+            
+            .action-button {
+                padding: 18px 30px;
+                font-size: 1.1em;
+                min-width: 200px;
+            }
+            
+            .summary-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            
+            .summary-stat {
+                padding: 12px;
+            }
+            
+            .summary-number {
+                font-size: 1.6em;
+            }
+            
+            .message {
+                position: fixed;
+                top: 10px;
+                left: 10px;
+                right: 10px;
+                max-width: none;
+                transform: translateY(-100px);
+                text-align: center;
+            }
+            
+            .message.show {
+                transform: translateY(0);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .summary-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .progress-stats {
+                font-size: 0.75em;
+            }
+            
+            .action-button {
+                padding: 15px 25px;
+                font-size: 1em;
+                min-width: 180px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💪 Complete Fitness & Nutrition Tracker</h1>
+        
+        <div class="date-info" id="dateInfo"></div>
+        
+        <!-- Weight Training Row -->
+        <div class="tracker-row">
+            <div class="tracker-info">
+                <div class="tracker-title">🏋️ Weight Training</div>
+                <div class="tracker-subtitle">Strength & resistance workouts</div>
+            </div>
+            <div class="progress-section">
+                <div class="progress-bar">
+                    <div class="progress-fill weights-progress" id="weightsProgress"></div>
+                </div>
+                <div class="progress-stats">
+                    <span id="weightsCompleted">0/365 days</span>
+                    <span id="weightsPercentage">0%</span>
+                </div>
+            </div>
+            <button class="action-button weights-btn" id="weightsBtn" onclick="completeActivity('weights')">
+                Complete Workout
+            </button>
+        </div>
+        
+        <!-- Cardio Row -->
+        <div class="tracker-row">
+            <div class="tracker-info">
+                <div class="tracker-title">🏃 Cardio</div>
+                <div class="tracker-subtitle">Running, cycling, swimming, etc.</div>
+            </div>
+            <div class="progress-section">
+                <div class="progress-bar">
+                    <div class="progress-fill cardio-progress" id="cardioProgress"></div>
+                </div>
+                <div class="progress-stats">
+                    <span id="cardioCompleted">0/365 days</span>
+                    <span id="cardioPercentage">0%</span>
+                </div>
+            </div>
+            <button class="action-button cardio-btn" id="cardioBtn" onclick="completeActivity('cardio')">
+                Complete Cardio
+            </button>
+        </div>
+        
+        <!-- Creatine Row -->
+        <div class="tracker-row">
+            <div class="tracker-info">
+                <div class="tracker-title">⚡ Creatine</div>
+                <div class="tracker-subtitle">Daily creatine supplementation</div>
+            </div>
+            <div class="progress-section">
+                <div class="progress-bar">
+                    <div class="progress-fill creatine-progress" id="creatineProgress"></div>
+                </div>
+                <div class="progress-stats">
+                    <span id="creatineCompleted">0/365 days</span>
+                    <span id="creatinePercentage">0%</span>
+                </div>
+            </div>
+            <button class="action-button creatine-btn" id="creatineBtn" onclick="completeActivity('creatine')">
+                Took Creatine
+            </button>
+        </div>
+        
+        <!-- Protein Row -->
+        <div class="tracker-row">
+            <div class="tracker-info">
+                <div class="tracker-title">🥩 Protein</div>
+                <div class="tracker-subtitle">Daily protein intake goal</div>
+            </div>
+            <div class="progress-section">
+                <div class="progress-bar">
+                    <div class="progress-fill protein-progress" id="proteinProgress"></div>
+                </div>
+                <div class="progress-stats">
+                    <span id="proteinCompleted">0/365 days</span>
+                    <span id="proteinPercentage">0%</span>
+                </div>
+            </div>
+            <button class="action-button protein-btn" id="proteinBtn" onclick="completeActivity('protein')">
+                Hit Protein Goal
+            </button>
+        </div>
+        
+        <!-- Summary Section -->
+        <div class="summary-section">
+            <div class="summary-title">📊 Overall Progress</div>
+            <div class="summary-stats">
+                <div class="summary-stat">
+                    <span class="summary-number" id="totalDaysActive">0</span>
+                    <div class="summary-label">Days with any activity</div>
+                </div>
+                <div class="summary-stat">
+                    <span class="summary-number" id="perfectDays">0</span>
+                    <div class="summary-label">Perfect days (all 4)</div>
+                </div>
+                <div class="summary-stat">
+                    <span class="summary-number" id="currentStreak">0</span>
+                    <div class="summary-label">Current streak</div>
+                </div>
+                <div class="summary-stat">
+                    <span class="summary-number" id="averageDaily">0%</span>
+                    <div class="summary-label">Average daily completion</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="reset-button" onclick="resetProgress()">Reset All Progress</button>
+        </div>
+    </div>
+    
+    <div class="message" id="message"></div>
+
+    <script>
+        // Initialize data structure
+        let fitnessData = {
+            weights: {},
+            cardio: {},
+            creatine: {},
+            protein: {},
+            startDate: null,
+            totalDays: 365
+        };
+
+        // Load data from localStorage
+        function loadData() {
+            try {
+                const savedData = localStorage.getItem('fitnessTrackerData');
+                if (savedData) {
+                    fitnessData = JSON.parse(savedData);
+                } else {
+                    // First time setup
+                    fitnessData.startDate = new Date().toDateString();
+                    saveData();
+                }
+            } catch (error) {
+                console.log('Error loading data:', error);
+                // If there's an error, start fresh
+                fitnessData.startDate = new Date().toDateString();
+                saveData();
+            }
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            try {
+                localStorage.setItem('fitnessTrackerData', JSON.stringify(fitnessData));
+                updateDisplay();
+            } catch (error) {
+                console.log('Error saving data:', error);
+                showMessage("Error saving data. Please try again.", "info");
+            }
+        }
+
+        // Get today's date key
+        function getTodayKey() {
+            return new Date().toDateString();
+        }
+
+        // Check if activity completed today
+        function isActivityCompletedToday(activity) {
+            return fitnessData[activity][getTodayKey()] === true;
+        }
+
+        // Complete an activity for today
+        function completeActivity(activity) {
+            const today = getTodayKey();
+            
+            if (isActivityCompletedToday(activity)) {
+                showMessage(`You've already completed ${activity} today!`, "info");
+                return;
+            }
+            
+            fitnessData[activity][today] = true;
+            saveData();
+            
+            const activityNames = {
+                weights: "weight training",
+                cardio: "cardio workout",
+                creatine: "creatine supplementation",
+                protein: "protein goal"
+            };
+            
+            showMessage(`Great job! ${activityNames[activity]} completed! 🎉`, "success");
+        }
+
+        // Calculate statistics for an activity
+        function getActivityStats(activity) {
+            const completedCount = Object.keys(fitnessData[activity]).length;
+            const percentage = Math.round((completedCount / fitnessData.totalDays) * 100);
+            return { completedCount, percentage };
+        }
+
+        // Get days with any activity
+        function getTotalActiveDays() {
+            const allDates = new Set();
+            Object.keys(fitnessData.weights).forEach(date => allDates.add(date));
+            Object.keys(fitnessData.cardio).forEach(date => allDates.add(date));
+            Object.keys(fitnessData.creatine).forEach(date => allDates.add(date));
+            Object.keys(fitnessData.protein).forEach(date => allDates.add(date));
+            return allDates.size;
+        }
+
+        // Get perfect days (all 4 activities completed)
+        function getPerfectDays() {
+            const allDates = new Set();
+            Object.keys(fitnessData.weights).forEach(date => allDates.add(date));
+            Object.keys(fitnessData.cardio).forEach(date => allDates.add(date));
+            Object.keys(fitnessData.creatine).forEach(date => allDates.add(date));
+            Object.keys(fitnessData.protein).forEach(date => allDates.add(date));
+            
+            let perfectDays = 0;
+            allDates.forEach(date => {
+                if (fitnessData.weights[date] && fitnessData.cardio[date] && 
+                    fitnessData.creatine[date] && fitnessData.protein[date]) {
+                    perfectDays++;
+                }
+            });
+            return perfectDays;
+        }
+
+        // Calculate current streak
+        function getCurrentStreak() {
+            let streak = 0;
+            let currentDate = new Date();
+            
+            while (true) {
+                const dateKey = currentDate.toDateString();
+                const hasAnyActivity = fitnessData.weights[dateKey] || fitnessData.cardio[dateKey] || 
+                                     fitnessData.creatine[dateKey] || fitnessData.protein[dateKey];
+                
+                if (hasAnyActivity || dateKey === getTodayKey()) {
+                    if (hasAnyActivity) streak++;
+                } else {
+                    break;
+                }
+                
+                currentDate.setDate(currentDate.getDate() - 1);
+                if (streak > 365) break; // Prevent infinite loop
+            }
+            
+            return streak;
+        }
+
+        // Update the display
+        function updateDisplay() {
+            const activities = ['weights', 'cardio', 'creatine', 'protein'];
+            
+            activities.forEach(activity => {
+                const stats = getActivityStats(activity);
+                
+                // Update progress bars
+                const progressBar = document.getElementById(`${activity}Progress`);
+                progressBar.style.width = stats.percentage + '%';
+                progressBar.textContent = stats.percentage + '%';
+                
+                // Update stats text
+                document.getElementById(`${activity}Completed`).textContent = `${stats.completedCount}/365 days`;
+                document.getElementById(`${activity}Percentage`).textContent = stats.percentage + '%';
+                
+                // Update button state
+                const button = document.getElementById(`${activity}Btn`);
+                if (isActivityCompletedToday(activity)) {
+                    button.textContent = "✅ Completed!";
+                    button.disabled = true;
+                } else {
+                    const buttonTexts = {
+                        weights: "Complete Workout",
+                        cardio: "Complete Cardio",
+                        creatine: "Took Creatine",
+                        protein: "Hit Protein Goal"
+                    };
+                    button.textContent = buttonTexts[activity];
+                    button.disabled = false;
+                }
+            });
+            
+            // Update summary statistics
+            const totalActiveDays = getTotalActiveDays();
+            const perfectDays = getPerfectDays();
+            const currentStreak = getCurrentStreak();
+            const averageCompletion = totalActiveDays > 0 ? 
+                Math.round(((Object.keys(fitnessData.weights).length + 
+                            Object.keys(fitnessData.cardio).length + 
+                            Object.keys(fitnessData.creatine).length + 
+                            Object.keys(fitnessData.protein).length) / (totalActiveDays * 4)) * 100) : 0;
+            
+            document.getElementById('totalDaysActive').textContent = totalActiveDays;
+            document.getElementById('perfectDays').textContent = perfectDays;
+            document.getElementById('currentStreak').textContent = currentStreak;
+            document.getElementById('averageDaily').textContent = averageCompletion + '%';
+            
+            // Update date info
+            document.getElementById('dateInfo').textContent = `Today: ${new Date().toLocaleDateString()}`;
+        }
+
+        // Show message
+        function showMessage(text, type) {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = text;
+            messageEl.className = `message ${type}`;
+            messageEl.classList.add('show');
+            
+            setTimeout(() => {
+                messageEl.classList.remove('show');
+            }, 3000);
+        }
+
+        // Reset progress
+        function resetProgress() {
+            if (confirm('Are you sure you want to reset ALL progress? This cannot be undone.')) {
+                fitnessData = {
+                    weights: {},
+                    cardio: {},
+                    creatine: {},
+                    protein: {},
+                    startDate: new Date().toDateString(),
+                    totalDays: 365
+                };
+                saveData();
+                showMessage("All progress reset successfully!", "info");
+            }
+        }
+
+        // Initialize the app
+        loadData();
+        updateDisplay();
+
+        // Update display when page becomes visible (handles day changes)
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                updateDisplay();
+            }
+        });
+    </script>
+</body>
+</html>
